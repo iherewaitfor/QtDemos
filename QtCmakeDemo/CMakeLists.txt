@@ -8,6 +8,8 @@ set(CMAKE_AUTOUIC ON)
 
 project(QtCMakeDemo)
 
+aux_source_directory(. DIR_SRCS)
+
 #选择64位还是32位的Qt
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 	set(Qt5HOMEDIR D:/Qt/Qt5.14.2/5.14.2/msvc2017_64)
@@ -24,7 +26,7 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 # 添加可执行文件，注意添加WIN32，否则有一个控制台黑框
 add_executable(${PROJECT_NAME}
 WIN32
-main.cpp
+${DIR_SRCS}
 )
 
 # 链接Qt库
