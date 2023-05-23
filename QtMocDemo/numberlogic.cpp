@@ -12,6 +12,6 @@ void NumberLogic::setCounter(qint32 counter) {
 }
 void NumberLogic::onIncreace() {
     m_counter++;
-//    emit counterChanged(m_counter);
+    emit counterChanged(m_counter);
     emit counterChangedText(QString::number(m_counter));
 }
