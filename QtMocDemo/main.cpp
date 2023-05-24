@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
         QApplication::translate("button increace", "button increace"), &window);
     button->move(100, 100);
     button->show();
-    bool ret = QObject::connect(button, SIGNAL(clicked()), &numberLogic, SLOT(onIncreace()),Qt::QueuedConnection);
+    QMetaObject::Connection c = QObject::connect(button, SIGNAL(clicked()), &numberLogic, SLOT(onIncreace()),Qt::QueuedConnection);
     QLabel* lableShow = new QLabel(QApplication::translate("show counter", "show counter"), &window);
     lableShow->move(100,150);
     lableShow->show();
