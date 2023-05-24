@@ -1,4 +1,65 @@
 
+# How to run
+先安装Qt。本例安装的版本是Qt5.14.2
+## 修改CMakeLists.txt设置Qt路径
+修改项目中CMakeLists.txt文件中的Qt路径。修改为你自己本地的路径。分别对应32位和64位。
+```c
+#选择64位还是32位的Qt
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	set(Qt5HOMEDIR D:/Qt/Qt5.14.2/5.14.2/msvc2017_64)
+else()
+	set(Qt5HOMEDIR D:/Qt/Qt5.14.2/5.14.2/msvc2017)
+endif()
+```
+## 生成项目
+在项目源码目录中新建build文件夹，然后命令行进入到build目录，
+生成32位项目是运行命令cmake .. -G "Visual Studio 16 2019" -A Win32
+```
+D:\srccode\QtDemos\QtMocDemo\build>cmake .. -G "Visual Studio 16 2019" -A Win32
+```
+。然后打开生成的sln文件，将Demo项目设置为启动项即可。 cmake使用可参考本github项目[cmakevisualstudio](https://github.com/iherewaitfor/cmakevisualstudio)
+
+如果你安装的是其他版本的Visual Studio，可以通过以下命令，查看对应的Visual Studio版本。
+```
+cmake -G help
+```
+
+```
+ Visual Studio 17 2022        = Generates Visual Studio 2022 project files.
+                                 Use -A option to specify architecture.
+  Visual Studio 16 2019        = Generates Visual Studio 2019 project files.
+                                 Use -A option to specify architecture.
+  Visual Studio 15 2017 [arch] = Generates Visual Studio 2017 project files.
+                                 Optional [arch] can be "Win64" or "ARM".
+  Visual Studio 14 2015 [arch] = Generates Visual Studio 2015 project files.
+                                 Optional [arch] can be "Win64" or "ARM".
+  Visual Studio 12 2013 [arch] = Generates Visual Studio 2013 project files.
+                                 Optional [arch] can be "Win64" or "ARM".
+  Visual Studio 11 2012 [arch] = Deprecated.  Generates Visual Studio 2012
+                                 project files.  Optional [arch] can be
+                                 "Win64" or "ARM".
+  Visual Studio 9 2008 [arch]  = Generates Visual Studio 2008 project files
+```
+
+比如你安装的是Visual studio 2017，需要构建Win64项目,可以将构建命令改成
+```
+cmake .. -G "Visual Studio 15 2017 Win64"
+```
+若需要使用Visual Studio 2017，需要构建win32项目，则可以将构建命令改成
+```
+cmake .. -G "Visual Studio 15 2017"
+```
+
+其他版本Visual Studeio命令可参考以下示例。
+```
+cmake .. -G "Visual Studio 17 2022"
+cmake .. -G "Visual Studio 17 2022" -A Win32
+cmake .. -G "Visual Studio 16 2019" -A Win32
+cmake .. -G "Visual Studio 16 2019"
+cmake .. -G "Visual Studio 15 2017"
+cmake .. -G "Visual Studio 15 2017 Win64"
+```
+
 # 查看moc生成的内容
 本示例中numberlogic.h的内容如下。
 ```C++
@@ -26,9 +87,9 @@ private:
 ```
 
 ## 生成类的元数据
-编译看可以查看逢恶导非的moc文件。
+编译看可以查看生成的moc文件。
 其中qt_meta_stringdata_NumberLogic和qt_meta_data_NumberLogic，记录了该类的元数据信息。
-
+生成的位置为
 \build\Demo_autogen\include_Debug\EWIEGA46WW\moc_numberlogic.cpp
 ```C++
 static const qt_meta_stringdata_NumberLogic_t qt_meta_stringdata_NumberLogic = {
