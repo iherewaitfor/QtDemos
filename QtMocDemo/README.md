@@ -80,8 +80,58 @@ static const uint qt_meta_data_NumberLogic[] = {
        0        // eod
 };
 ```
+# 基础知识
+## 元对象系统（The Meta-Object System）
+Qt的元对象系统 提供了信号和槽用的内部通信机制，运行时类型信息，动态属性系统。
 
-# QMetaObject
+元对象系统基于以下三个方面：
+- Object类：为可以复用元对象系统的对象提供了一个基类。
+- Q_OBJECT宏：类声明私有部分中的Q_OBJECT宏用于启用元对象功能，如动态属性、信号和槽。
+- moc(Meta-Object Compiler):给每个QObject子类生成实现元对象功能的必要代码。
+
+moc工具读取一个C++源文件。如果它找到一个或多个包含Q_OBJECT宏的类声明，它将生成另一个C++源文件，该文件包含这些类中每个类的元对象代码。这个生成的源文件要么被#包含到类的源文件中，要么更常见的是，被编译并与类的实现链接。
+
+除了为对象之间的通信提供信号和插槽机制（引入该系统的主要原因）外，元对象代码还提供了以下附加功能：
+
+- QObject::metaObject()返回该类关联的元对象。
+- QMetaObject::className() 在运行时以字符串形式返回类名，而不需要通过C++编译器支持本机运行时类型信息（RTTI）。
+- QObject:：inherits（）函数返回对象是否是继承QObject继承树中指定类的类的实例。
+- QObject::tr() 和 QObject::trUtf8() 为国际化翻译字符串。
+- QObject::setProperty() 和 QObject::property()按名称动态设置和获取属性。
+- QMetaObject::newInstance() 构造类的一个新实例。
+
+还可以使用qobject_cast（）对qobject类执行动态强制转换。qobject_cast（）函数的行为与标准C++ dynamic_cast（）类似，其优点是不需要RTTI支持，并且可以跨动态库边界工作。它试图将其参数强制转换为尖括号中指定的指针类型，如果对象的类型正确（在运行时确定），则返回非零指针，如果对象类型不兼容，则返回nullptr。
+
+例如， 假设 MyWidget继承 QWidget，并声明了Q_OBJECT宏:
+```C++
+    QObject *obj = new MyWidget;
+```
+类型为QObject *的obj变量，实际上指向一个MyWidget对象，因此我们可以适当的强制转换它
+The obj variable, of type QObject *, actually refers to a MyWidget object, so we can cast it appropriately:
+```C++
+    QWidget *widget = qobject_cast<QWidget *>(obj);
+```
+
+可以从 QObject强制转换到 QWidget，因为这个对象实际上是一个MyWidget，MyWidaget是QWidget的子类。既然我们知道obj是一个MyWidget，我们也可以将其强制转换为MyWidget *。
+```C++
+    MyWidget *myWidget = qobject_cast<MyWidget *>(obj);
+```
+转换到MyWidget是成功的，因为qobject_cast（）没有区分内置的Qt类型和自定义类型。
+```C++
+    QLabel *label = qobject_cast<QLabel *>(obj);
+    // label is 0
+```
+另一方面，对QLabel的强制转换失败。然后指针被设置为0。这使得可以在运行时根据类型不同地处理不同类型的对象：
+```C++
+    if (QLabel *label = qobject_cast<QLabel *>(obj)) {
+        label->setText(tr("Ping"));
+    } else if (QPushButton *button = qobject_cast<QPushButton *>(obj)) {
+        button->setText(tr("Pong!"));
+    }
+```
+## QObject
+
+## QMetaObject
 Qt中的Qt元对象系统（The Qt Meta-Object System）负责信号和插槽之间的对象通信机制、运行时类型信息和Qt属性系统。为应用程序中使用的每个QObject子类创建一个QMetaObject实例，该实例存储QObject个子类的所有元信息。此对象可用作QObject:：metaObject（）。
 
 常用到的方法
@@ -97,14 +147,6 @@ Qt中的Qt元对象系统（The Qt Meta-Object System）负责信号和插槽之
 类还可以有一个附加类信息的名称-值对列表，存储在QMetaClassInfo对象中。对的数量由classInfoCount（）返回，单个对由classInfo（）返回。您可以使用indexOfClassInfo（）搜索对。
 
 相相关的信息还可以去查看：QMetaClassInfo, QMetaEnum, QMetaMethod, QMetaProperty, QMetaType, and Meta-Object System.
-
-# 元对象系统（The Meta-Object System）
-Qt的元对象系统 提供了信号和槽用的内部通信机制，运行时类型信息，动态属性系统。
-
-元对象系统基于以下三个方面：
-- Object类：为可以复用元对象系统的对象提供了一个基类。
-- Q_OBJECT宏：类声明私有部分中的Q_OBJECT宏用于启用元对象功能，如动态属性、信号和槽。
-- moc(Meta-Object Compiler):给每个QObject子类生成实现元对象功能的必要代码。
 
 
 # 参考
