@@ -25,7 +25,7 @@ private:
 #endif
 ```
 
-## 生成内容
+## 生成类的元数据
 编译看可以查看逢恶导非的moc文件。
 其中qt_meta_stringdata_NumberLogic和qt_meta_data_NumberLogic，记录了该类的元数据信息。
 
@@ -79,6 +79,135 @@ static const uint qt_meta_data_NumberLogic[] = {
 
        0        // eod
 };
+```
+
+生成的元对象相关方法：
+
+```C++
+QT_INIT_METAOBJECT const QMetaObject NumberLogic::staticMetaObject = { {
+    QMetaObject::SuperData::link<QObject::staticMetaObject>(),
+    qt_meta_stringdata_NumberLogic.data,
+    qt_meta_data_NumberLogic,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *NumberLogic::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+```
+生成的元调用 相关方法
+
+qt_static_metacall 和 qt_metacall
+```C++
+void NumberLogic::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        auto *_t = static_cast<NumberLogic *>(_o);
+        Q_UNUSED(_t)
+        switch (_id) {
+        case 0: _t->counterChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->counterChangedText((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 2: _t->onIncreace(); break;
+        default: ;
+        }
+    } else if (_c == QMetaObject::IndexOfMethod) {
+        int *result = reinterpret_cast<int *>(_a[0]);
+        {
+            using _t = void (NumberLogic::*)(int );
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&NumberLogic::counterChanged)) {
+                *result = 0;
+                return;
+            }
+        }
+        {
+            using _t = void (NumberLogic::*)(QString );
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&NumberLogic::counterChangedText)) {
+                *result = 1;
+                return;
+            }
+        }
+    }
+#ifndef QT_NO_PROPERTIES
+    else if (_c == QMetaObject::ReadProperty) {
+        auto *_t = static_cast<NumberLogic *>(_o);
+        Q_UNUSED(_t)
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: *reinterpret_cast< qint32*>(_v) = _t->counter(); break;
+        default: break;
+        }
+    } else if (_c == QMetaObject::WriteProperty) {
+        auto *_t = static_cast<NumberLogic *>(_o);
+        Q_UNUSED(_t)
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: _t->setCounter(*reinterpret_cast< qint32*>(_v)); break;
+        default: break;
+        }
+    } else if (_c == QMetaObject::ResetProperty) {
+    }
+#endif // QT_NO_PROPERTIES
+}
+
+int NumberLogic::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 3)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 3;
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 3)
+            *reinterpret_cast<int*>(_a[0]) = -1;
+        _id -= 3;
+    }
+#ifndef QT_NO_PROPERTIES
+    else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
+            || _c == QMetaObject::ResetProperty || _c == QMetaObject::RegisterPropertyMetaType) {
+        qt_static_metacall(this, _c, _id, _a);
+        _id -= 1;
+    } else if (_c == QMetaObject::QueryPropertyDesignable) {
+        _id -= 1;
+    } else if (_c == QMetaObject::QueryPropertyScriptable) {
+        _id -= 1;
+    } else if (_c == QMetaObject::QueryPropertyStored) {
+        _id -= 1;
+    } else if (_c == QMetaObject::QueryPropertyEditable) {
+        _id -= 1;
+    } else if (_c == QMetaObject::QueryPropertyUser) {
+        _id -= 1;
+    }
+#endif // QT_NO_PROPERTIES
+    return _id;
+}
+```
+## 给对应的信号生成方法
+```C++
+signals:
+    void counterChanged(int counter);
+    void counterChangedText(QString strCounter);
+```
+以上两个信号生成的代码。
+```C++
+// SIGNAL 0
+void NumberLogic::counterChanged(int _t1)
+{
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
+}
+
+// SIGNAL 1
+void NumberLogic::counterChangedText(QString _t1)
+{
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
+    QMetaObject::activate(this, &staticMetaObject, 1, _a);
+}
 ```
 # 基础知识
 ## 元对象系统（The Meta-Object System）
