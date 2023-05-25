@@ -12,6 +12,8 @@ public:
     NumberLogic(QObject*parent = nullptr);
     qint32 counter();
     void setCounter(qint32 counter);
+    Q_INVOKABLE void addCount(qint32 i); // can be invoked via the meta-object system
+    void nornmalAddCount(qint32 i);
 public slots:
     void onIncreace();
 signals:
