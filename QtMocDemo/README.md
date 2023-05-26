@@ -520,6 +520,98 @@ void NumberLogic::counterChangedText(QString _t1)
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 ```
+每个信号都生成了对应的方法。
+
+Qt5.14.2\5.14.2\Src\qtbase\src\corelib\kernel\qobjectdefs.h
+另外查看signals的宏定义。看出来，signals最终是被换成了public。signals关键字主要是给moc去生成对应的方法，并且这些方法都是public的。
+同时还会生成一些元数据到qt_meta_stringdata_NumberLogic和qt_meta_data_NumberLogic。
+
+看到有
+- 信号的字符串名字，可能有类型名字等
+- 信号的个数
+- 信号函数
+- 信号函数的各个参数的类型，名字
+```       C++
+  2,       // signalCount
+
+// signals: name, argc, parameters, tag, flags
+       1,    1,   34,    2, 0x06 /* Public */,
+       4,    1,   37,    2, 0x06 /* Public */,
+
+ // slots: name, argc, parameters, tag, flags
+       6,    0,   40,    2, 0x0a /* Public */,
+
+ // methods: name, argc, parameters, tag, flags
+       7,    1,   41,    2, 0x02 /* Public */,
+
+ // signals: parameters
+    QMetaType::Void, QMetaType::Int,    3,
+    QMetaType::Void, QMetaType::QString,    5,
+```
+
+signals的宏定义
+
+```C++
+// The following macros can be defined by tools that understand Qt
+// to have the information from the macro.
+# define QT_ANNOTATE_ACCESS_SPECIFIER(x)
+// The following macros are our "extensions" to C++
+// They are used, strictly speaking, only by the moc.
+# define Q_SIGNALS public QT_ANNOTATE_ACCESS_SPECIFIER(qt_signal)
+#define signals Q_SIGNALS
+```
+## slots的宏定义
+slots宏，主要用于moc读取 生成相关信息。最终宏定义是空的。
+```C++
+// The following macros can be defined by tools that understand Qt
+// to have the information from the macro.
+# define QT_ANNOTATE_ACCESS_SPECIFIER(x)
+// The following macros are our "extensions" to C++
+// They are used, strictly speaking, only by the moc.
+# define Q_SLOTS QT_ANNOTATE_ACCESS_SPECIFIER(qt_slot)
+#define slots Q_SLOTS
+```
+## Q_INVOKABLE
+Q_INVOKABLE宏，主要用于moc读取 生成对应的方法元数据。最终宏定义是空的。
+```C++
+// The following macros can be defined by tools that understand Qt
+// to have the information from the macro.
+# define QT_ANNOTATE_FUNCTION(x)
+// The following macros are our "extensions" to C++
+// They are used, strictly speaking, only by the moc.
+#define Q_INVOKABLE  QT_ANNOTATE_FUNCTION(qt_invokable)
+```
+## Q_PROPERTY
+Q_PROPERTY宏，主要用于moc读取 生成对应的方法元数据。最终宏定义是空的。
+```C++
+// The following macros can be defined by tools that understand Qt
+// to have the information from the macro.
+# define QT_ANNOTATE_CLASS(type, ...)
+// The following macros are our "extensions" to C++
+// They are used, strictly speaking, only by the moc.
+#define Q_PROPERTY(...) QT_ANNOTATE_CLASS(qt_property, __VA_ARGS__)
+```
+## Q_OBJECT
+
+```C++
+/* qmake ignore Q_OBJECT */
+#define Q_OBJECT \
+public: \
+    QT_WARNING_PUSH \
+    Q_OBJECT_NO_OVERRIDE_WARNING \
+    static const QMetaObject staticMetaObject; \
+    virtual const QMetaObject *metaObject() const; \
+    virtual void *qt_metacast(const char *); \
+    virtual int qt_metacall(QMetaObject::Call, int, void **); \
+    QT_TR_FUNCTIONS \
+private: \
+    Q_OBJECT_NO_ATTRIBUTES_WARNING \
+    Q_DECL_HIDDEN_STATIC_METACALL static void qt_static_metacall(QObject *, QMetaObject::Call, int, void **); \
+    QT_WARNING_POP \
+    struct QPrivateSignal {}; \
+    QT_ANNOTATE_CLASS(qt_qobject, "")
+```
+
 # 基础知识
 ## 元对象系统（The Meta-Object System）
 Qt的元对象系统 提供了信号和槽用的内部通信机制，运行时类型信息，动态属性系统。
