@@ -1,3 +1,24 @@
+- [QtMocDemo](#qtmocdemo)
+- [How to run](#how-to-run)
+  - [修改CMakeLists.txt设置Qt路径](#修改cmakeliststxt设置qt路径)
+  - [生成项目](#生成项目)
+- [查看moc生成的内容](#查看moc生成的内容)
+  - [生成类的元数据](#生成类的元数据)
+  - [signals 给对应的信号生成方法](#signals-给对应的信号生成方法)
+  - [slots的宏定义](#slots的宏定义)
+  - [Q\_INVOKABLE](#q_invokable)
+  - [Q\_PROPERTY](#q_property)
+  - [Q\_OBJECT](#q_object)
+- [基础知识](#基础知识)
+  - [元对象系统（The Meta-Object System）](#元对象系统the-meta-object-system)
+  - [QObject](#qobject)
+  - [QMetaObject](#qmetaobject)
+- [参考](#参考)
+
+
+
+# QtMocDemo
+该例主要用于综合展示Qt的moc生成的内容，主要用于理解Qt核心的信号槽。
 
 # How to run
 先安装Qt。本例安装的版本是Qt5.14.2
@@ -498,7 +519,7 @@ int NumberLogic::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 ```
-## 给对应的信号生成方法
+## signals 给对应的信号生成方法
 ```C++
 signals:
     void counterChanged(int counter);
