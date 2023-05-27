@@ -13,6 +13,8 @@
   - [元对象系统（The Meta-Object System）](#元对象系统the-meta-object-system)
   - [QObject](#qobject)
   - [QMetaObject](#qmetaobject)
+- [信号和槽的实现细节(to do)](#信号和槽的实现细节to-do)
+  - [Connect](#connect)
 - [参考](#参考)
 
 
@@ -581,6 +583,14 @@ signals的宏定义
 # define Q_SIGNALS public QT_ANNOTATE_ACCESS_SPECIFIER(qt_signal)
 #define signals Q_SIGNALS
 ```
+
+emit的宏定义。其实是空的。便于理解信号。
+```C++
+// The following macros are our "extensions" to C++
+// They are used, strictly speaking, only by the moc.
+# define emit
+```
+
 ## slots的宏定义
 slots宏，主要用于moc读取 生成相关信息。最终宏定义是空的。
 ```C++
@@ -701,7 +711,8 @@ Qt中的Qt元对象系统（The Qt Meta-Object System）负责信号和插槽之
 
 相相关的信息还可以去查看：QMetaClassInfo, QMetaEnum, QMetaMethod, QMetaProperty, QMetaType, and Meta-Object System.
 
-
+# 信号和槽的实现细节(to do)
+## Connect
 # 参考
 [https://doc.qt.io/qt-5.15/qmetaobject.html#details](https://doc.qt.io/qt-5.15/qmetaobject.html#details)
 
