@@ -5,6 +5,11 @@ int main(int argc, char *argv[])
 {
     NumberLogic numberLogic;
     std::cout << "Hello world" << std::endl;
-    //QEventLoop eventloop;
-    //eventloop.exec();
+    
+    QCoreApplication app(argc, argv);
+    QTimer timer;
+    timer.setInterval(5000);
+    QObject::connect(&timer, SIGNAL(timeout()), &numberLogic, SLOT(onIncreace()));
+    timer.start();
+    app.exec();
 }
