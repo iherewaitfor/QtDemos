@@ -29,3 +29,4 @@ find_package(Qt5 COMPONENTS Core RemoteObjects)
 
 add_subdirectory(directconnectserver)
 add_subdirectory(directconnectclient)
+add_subdirectory(directconnectdynamicclient)
