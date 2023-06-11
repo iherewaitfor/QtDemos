@@ -15,6 +15,7 @@
   - [QMetaObject](#qmetaobject)
 - [信号和槽的实现细节(to do)](#信号和槽的实现细节to-do)
   - [Connect](#connect)
+  - [SLOT和SIGNAL宏](#slot和signal宏)
 - [参考](#参考)
 
 
@@ -713,6 +714,30 @@ Qt中的Qt元对象系统（The Qt Meta-Object System）负责信号和插槽之
 
 # 信号和槽的实现细节(to do)
 ## Connect
+## SLOT和SIGNAL宏
+```C++
+# define SLOT(a)     qFlagLocation("1"#a QLOCATION)
+# define SIGNAL(a)   qFlagLocation("2"#a QLOCATION)
+
+# define QLOCATION "\0" __FILE__ ":" QT_STRINGIFY(__LINE__)
+```
+qFlagLocation函数位于Src\qtbase\src\corelib\kernel\qobject.cpp文件
+```C++
+const char *qFlagLocation(const char *method)
+{
+    QThreadData *currentThreadData = QThreadData::current(false);
+    if (currentThreadData != 0)
+        currentThreadData->flaggedSignatures.store(method);
+    return method;
+}
+```
+
+通过该宏可以看出，在本线程中，SIGNAL宏就是把信号的签名前面加上字符2,比如信号nameChange(QString)
+```C++
+ QObject::connect(&student, SIGNAL(nameChange(QString)), &studentView, SLOT(onNameChange(Qstring)));
+```
+就是转出"2nameChange(QString)"。
+
 # 参考
 [https://doc.qt.io/qt-5.15/qmetaobject.html#details](https://doc.qt.io/qt-5.15/qmetaobject.html#details)
 
