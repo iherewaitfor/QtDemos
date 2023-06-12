@@ -16,6 +16,7 @@
 - [信号和槽的实现细节(to do)](#信号和槽的实现细节to-do)
   - [Connect](#connect)
   - [SLOT和SIGNAL宏](#slot和signal宏)
+  - [信号与曹连接时的的参数检查checkConnectArgs](#信号与曹连接时的的参数检查checkconnectargs)
 - [参考](#参考)
 
 
@@ -714,6 +715,41 @@ Qt中的Qt元对象系统（The Qt Meta-Object System）负责信号和插槽之
 
 # 信号和槽的实现细节(to do)
 ## Connect
+```C++
+    static QMetaObject::Connection connect(const QObject *sender, const char *signal,
+                        const QObject *receiver, const char *member, Qt::ConnectionType = Qt::AutoConnection);
+
+    static QMetaObject::Connection connect(const QObject *sender, const QMetaMethod &signal,
+                        const QObject *receiver, const QMetaMethod &method,
+                        Qt::ConnectionType type = Qt::AutoConnection);
+
+    inline QMetaObject::Connection connect(const QObject *sender, const char *signal,
+                        const char *member, Qt::ConnectionType type = Qt::AutoConnection) const;
+```
+其中业务常用的是
+```C++
+    static QMetaObject::Connection connect(const QObject *sender, const char *signal,
+                        const QObject *receiver, const char *member, Qt::ConnectionType = Qt::AutoConnection);
+```
+具体实际可以查看源码\Src\qtbase\src\corelib\kernel\qobject.cpp
+
+该方法主要逻辑：
+- 判断参数的一些合法性
+- 根据信号的字符串（2名字和参数类型），从sender对象的元数据中找到该信号的索引位置。
+- 根据槽的字符串（1名字和参数类型），从receiver对象的元数据中找到该槽的索引位置
+- 然后返回以下QMetaObject::Connection。
+```C++
+    QMetaObject::Connection handle = QMetaObject::Connection(QMetaObjectPrivate::connect(
+        sender, signal_index, smeta, receiver, method_index_relative, rmeta ,type, types));
+    return handle;
+```
+其中QMetaObjectPrivate::connect原型如下。
+```C++
+QObjectPrivate::Connection *QMetaObjectPrivate::connect(const QObject *sender,
+                                 int signal_index, const QMetaObject *smeta,
+                                 const QObject *receiver, int method_index,
+                                 const QMetaObject *rmeta, int type, int *types)
+```
 ## SLOT和SIGNAL宏
 ```C++
 # define SLOT(a)     qFlagLocation("1"#a QLOCATION)
@@ -737,6 +773,26 @@ const char *qFlagLocation(const char *method)
  QObject::connect(&student, SIGNAL(nameChange(QString)), &studentView, SLOT(onNameChange(Qstring)));
 ```
 就是转出"2nameChange(QString)"。
+## 信号与曹连接时的的参数检查checkConnectArgs
+Src\qtbase\src\corelib\kernel\qmetaobject.cpp
+从源码中可以看出，
+- 信号的参数个数>=槽的参数
+- 槽的参数个数可以比信号的参数的数量少，但存在的参数类型必须依次与信号的一致。
+
+
+```C++
+bool QMetaObjectPrivate::checkConnectArgs(int signalArgc, const QArgumentType *signalTypes,
+                                          int methodArgc, const QArgumentType *methodTypes)
+{
+    if (signalArgc < methodArgc)
+        return false;
+    for (int i = 0; i < methodArgc; ++i) {
+        if (signalTypes[i] != methodTypes[i])
+            return false;
+    }
+    return true;
+}
+```
 
 # 参考
 [https://doc.qt.io/qt-5.15/qmetaobject.html#details](https://doc.qt.io/qt-5.15/qmetaobject.html#details)
