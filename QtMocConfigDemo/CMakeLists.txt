@@ -28,7 +28,7 @@ file (GLOB HEADERS
 # 需要执行moc的头文件列表
 set(MOC_HEADERS ${HEADERS})
 # 可以排除某些头文件不执行moc
-#list(REMOVE_ITEM MOC_HEADERS ${PROJECT_SOURCE_DIR}/numberlogic.h)
+list(REMOVE_ITEM MOC_HEADERS ${PROJECT_SOURCE_DIR}/autosignalsemitter.h)
 
 # qt5_wrap_cpp宏定义，位于Qt5CoreMacros.cmake
 # qt5_wrap_cpp(outfiles inputfile ... )
