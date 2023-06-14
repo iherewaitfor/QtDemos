@@ -11,3 +11,5 @@ to do:
 
 QVariant to void*
 
+const void *QVariant::constData()
+

@@ -59,9 +59,8 @@ void InterfaceAdapter::invokeMethod(const QString& method, const QVariantList& a
                 if (paramTypes.size() == 1) {
                     //bInvokeOK = metaMethod.invoke(sourceObject, QGenericReturnArgument("int", retVale),
                     //    QGenericArgument("int", &num));
-
                     bInvokeOK = metaMethod.invoke(sourceObject, QGenericReturnArgument(QMetaType::typeName(returnTypeID), retVal),
-                        QGenericArgument(paramTypes.at(0).constData(), &num));
+                        QGenericArgument(paramTypes.at(0).constData(), const_cast<void*>(args.at(0).constData())));
                 }
                 QVariant retVariant(returnTypeID, retVal);
                 std::cout << "bInvokeOK: " << bInvokeOK << " returnvalue is " << retVariant.toInt() << std::endl;
