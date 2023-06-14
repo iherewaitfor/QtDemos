@@ -10,8 +10,9 @@ qint32 NumberLogic::counter() {
 void NumberLogic::setCounter(qint32 counter) {
     this->m_counter = counter;
 }
-void NumberLogic::addCount(qint32 i) {
+int NumberLogic::addCount(qint32 i) {
     m_counter += i;
+    return m_counter;
 }
 void NumberLogic::nornmalAddCount(qint32 i) {
     m_counter += i;

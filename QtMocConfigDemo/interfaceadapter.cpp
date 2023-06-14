@@ -1,6 +1,6 @@
 #include "interfaceadapter.h"
 #include "autosignalsemitter.h"
-
+#include <iostream>
 InterfaceAdapter::InterfaceAdapter(QObject*parent)
     : QObject(parent){
 
@@ -31,6 +31,46 @@ QString InterfaceAdapter::interfacePath()
     }
 }
 
+void InterfaceAdapter::invokeMethod(const QString& method, const QVariantList& args, const QString& callbackId) {
+
+    const QMetaObject* metaObject = m_interfaceObject->metaObject();
+    QObject* sourceObject = m_interfaceObject;
+
+    for (int i = 0; i != metaObject->methodCount(); ++i)
+    {
+        QMetaMethod metaMethod = metaObject->method(i);
+        if (metaMethod.methodType() == QMetaMethod::Method
+            || metaMethod.methodType() == QMetaMethod::Slot)
+        {
+            QString methodName = QLatin1String(metaMethod.methodSignature());
+            methodName = methodName.left(methodName.indexOf("("));
+
+            if (methodName == method)
+            {
+                auto paramTypes = metaMethod.parameterTypes();
+                auto returnTypeID = metaMethod.returnType();
+                //QVariant retVale;
+                void* retVal = QMetaType::create(returnTypeID);
+                int num = 10;
+                QVariantList args2 = args;
+                bool bInvokeOK = false;
+                
+                // to do QVariant to void *
+                if (paramTypes.size() == 1) {
+                    //bInvokeOK = metaMethod.invoke(sourceObject, QGenericReturnArgument("int", retVale),
+                    //    QGenericArgument("int", &num));
+
+                    bInvokeOK = metaMethod.invoke(sourceObject, QGenericReturnArgument(QMetaType::typeName(returnTypeID), retVal),
+                        QGenericArgument(paramTypes.at(0).constData(), &num));
+                }
+                QVariant retVariant(returnTypeID, retVal);
+                std::cout << "bInvokeOK: " << bInvokeOK << " returnvalue is " << retVariant.toInt() << std::endl;
+                break;
+            }
+        }
+    }
+}
+
 void InterfaceAdapter::onProxySignal(QObject* sender, QMetaMethod signal, QVariantList args)
 {
     (void)sender;
@@ -44,6 +84,10 @@ void InterfaceAdapter::onProxySignal(QObject* sender, QMetaMethod signal, QVaria
 void InterfaceAdapter::transerProxySignal(QString eventName, QVariantList arguments)
 {
     //to do: transerProxySignal
+    std::cout << " transerProxySignal: " << eventName.toStdString() << " arguments size " << arguments.size() << std::endl;
+    if (arguments.size() > 0) {
+        std::cout << " fist arg value is: " << arguments.at(0).toString().toStdString() << std::endl;
+    }
 
 }
 

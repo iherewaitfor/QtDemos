@@ -1,6 +1,7 @@
 #include <QtCore>
 #include "numberlogic.h"
 #include <iostream>
+#include "interfaceadapter.h"
 int main(int argc, char *argv[])
 {
     NumberLogic numberLogic;
@@ -11,5 +12,12 @@ int main(int argc, char *argv[])
     timer.setInterval(5000);
     QObject::connect(&timer, SIGNAL(timeout()), &numberLogic, SLOT(onIncreace()));
     timer.start();
+
+    InterfaceAdapter interfaceAdapter;
+    interfaceAdapter.initInterface(&numberLogic, "", "numberlogic");
+    QVariantList argList;
+    argList << 10;
+    interfaceAdapter.invokeMethod("addCount", argList, "123");
+
     app.exec();
 }

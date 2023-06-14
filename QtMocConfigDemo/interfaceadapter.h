@@ -15,6 +15,7 @@ public:
     ~InterfaceAdapter();
     void initInterface(QObject* interfaceImpl, QString parentPath, QString interfaceName);
     QString interfacePath();
+    void invokeMethod( const QString& method, const QVariantList& args, const QString& callbackId);
 
     void transerProxySignal(QString signalName, QVariantList arguments);
 
