@@ -14,6 +14,8 @@ public:
     void setCounter(qint32 counter);
     Q_INVOKABLE int addCount(qint32 i); // can be invoked via the meta-object system
     void nornmalAddCount(qint32 i);
+    Q_INVOKABLE void testVoidAdd(qint32 a, qint32 b);
+    Q_INVOKABLE int test3ArgAdd(qint32 a, qint32 b, QString c);
 public slots:
     void onIncreace();
 signals:

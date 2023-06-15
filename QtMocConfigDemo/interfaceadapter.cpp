@@ -1,6 +1,7 @@
 #include "interfaceadapter.h"
 #include "autosignalsemitter.h"
 #include <iostream>
+#include "metainvoker.h"
 InterfaceAdapter::InterfaceAdapter(QObject*parent)
     : QObject(parent){
 
@@ -47,23 +48,32 @@ void InterfaceAdapter::invokeMethod(const QString& method, const QVariantList& a
 
             if (methodName == method)
             {
-                auto paramTypes = metaMethod.parameterTypes();
-                auto returnTypeID = metaMethod.returnType();
-                //QVariant retVale;
-                void* retVal = QMetaType::create(returnTypeID);
-                int num = 10;
-                QVariantList args2 = args;
-                bool bInvokeOK = false;
+                //auto paramTypes = metaMethod.parameterTypes();
+                //auto returnTypeID = metaMethod.returnType();
+                ////QVariant retVale;
+                //void* retVal = QMetaType::create(returnTypeID);
+                //int num = 10;
+                //QVariantList args2 = args;
+                //bool bInvokeOK = false;
+                //
+                //// to do QVariant to void *
+                //if (paramTypes.size() == 1) {
+                //    //bInvokeOK = metaMethod.invoke(sourceObject, QGenericReturnArgument("int", retVale),
+                //    //    QGenericArgument("int", &num));
+                //    bInvokeOK = metaMethod.invoke(sourceObject, QGenericReturnArgument(QMetaType::typeName(returnTypeID), retVal),
+                //        QGenericArgument(paramTypes.at(0).constData(), const_cast<void*>(args.at(0).constData())));
+                //}
+                //QVariant retVariant(returnTypeID, retVal);
+                //std::cout << "bInvokeOK: " << bInvokeOK << " returnvalue is " << retVariant.toInt() << std::endl;
                 
-                // to do QVariant to void *
-                if (paramTypes.size() == 1) {
-                    //bInvokeOK = metaMethod.invoke(sourceObject, QGenericReturnArgument("int", retVale),
-                    //    QGenericArgument("int", &num));
-                    bInvokeOK = metaMethod.invoke(sourceObject, QGenericReturnArgument(QMetaType::typeName(returnTypeID), retVal),
-                        QGenericArgument(paramTypes.at(0).constData(), const_cast<void*>(args.at(0).constData())));
-                }
-                QVariant retVariant(returnTypeID, retVal);
-                std::cout << "bInvokeOK: " << bInvokeOK << " returnvalue is " << retVariant.toInt() << std::endl;
+                MetaInvoker metaInvoker;
+                metaInvoker.object = m_interfaceObject;
+                metaInvoker.args = args;
+                metaInvoker.metaMethod = metaMethod;
+                metaInvoker.run();
+
+                std::cout << "bInvokeOK: " << metaInvoker.ok << " returnvalue is " << metaInvoker.result.toString().toStdString() << std::endl;
+                
                 break;
             }
         }

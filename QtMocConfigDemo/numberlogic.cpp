@@ -14,6 +14,16 @@ int NumberLogic::addCount(qint32 i) {
     m_counter += i;
     return m_counter;
 }
+void NumberLogic::testVoidAdd(qint32 a, qint32 b) {
+    m_counter += a;
+    m_counter += b;
+}
+int NumberLogic::test3ArgAdd(qint32 a, qint32 b, QString c) {
+    m_counter += a;
+    m_counter += b;
+    m_counter += c.toInt();
+    return m_counter;
+}
 void NumberLogic::nornmalAddCount(qint32 i) {
     m_counter += i;
 }

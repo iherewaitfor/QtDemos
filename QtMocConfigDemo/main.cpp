@@ -19,5 +19,16 @@ int main(int argc, char *argv[])
     argList << 10;
     interfaceAdapter.invokeMethod("addCount", argList, "123");
 
+    QVariantList argList2;
+    argList2 << 10;
+    argList2 << 20;
+    interfaceAdapter.invokeMethod("testVoidAdd", argList2, "1234");
+
+    QVariantList argList3;
+    argList3 << 100;
+    argList3 << 200;
+    argList3 << "300";
+    interfaceAdapter.invokeMethod("test3ArgAdd", argList3, "1235");
+
     app.exec();
 }
