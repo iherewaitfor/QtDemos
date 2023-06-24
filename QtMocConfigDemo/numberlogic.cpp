@@ -2,7 +2,7 @@
 
 NumberLogic::NumberLogic(QObject*parent)
     : QObject(parent),m_counter(0){
-
+    setObjectName("NumberLogic");
 }
 qint32 NumberLogic::counter() {
     return m_counter;

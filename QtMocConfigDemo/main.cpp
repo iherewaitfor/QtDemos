@@ -2,6 +2,8 @@
 #include "numberlogic.h"
 #include <iostream>
 #include "interfaceadapter.h"
+#include "qmetatest.h"
+#include "subnumberlogic.h"
 int main(int argc, char *argv[])
 {
     NumberLogic numberLogic;
@@ -29,6 +31,7 @@ int main(int argc, char *argv[])
     argList3 << 200;
     argList3 << "300";
     interfaceAdapter.invokeMethod("test3ArgAdd", argList3, "1235");
-
+    SubNumberLogic subNumberLogic(&numberLogic);
+    QMetaTest::getInstance()->getOBjectMetadata(&numberLogic);
     app.exec();
 }
