@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
     ptr.reset(repNode.acquireDynamic("NumberLogic")); // acquire replica of source from host node
 
-    DynamicClient rswitch(ptr); // create client switch object and pass replica reference to it
+    DynamicClient numberLogic(ptr); // create NumberLogic object and pass replica reference to it
 
     return a.exec();
 }

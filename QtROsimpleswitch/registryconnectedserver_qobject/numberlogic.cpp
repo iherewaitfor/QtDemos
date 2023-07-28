@@ -26,3 +26,12 @@ void NumberLogic::onIncreace() {
     emit counterChangedText(QString::number(m_counter));
     qDebug() << "onIncreace " << m_counter;
 }
+QString NumberLogic::addQString(QString strN) {
+    m_counter += strN.toInt();
+    return QString::number(m_counter);
+}
+QString NumberLogic::addQStringSlot(QString strN) {
+    m_counter += strN.toInt();
+    return QString::number(m_counter);
+}
+
