@@ -28,10 +28,14 @@ void NumberLogic::onIncreace() {
 }
 QString NumberLogic::addQString(QString strN) {
     m_counter += strN.toInt();
+    qDebug() << "addQString: strN=" << strN << " m_counter:" << m_counter;
     return QString::number(m_counter);
 }
 QString NumberLogic::addQStringSlot(QString strN) {
     m_counter += strN.toInt();
     return QString::number(m_counter);
 }
-
+void NumberLogic::addNoReturn(qint32 i) {
+    m_counter += i;
+    qDebug() << "addNoReturn: " << " i=" << i << " m_counter:" << m_counter;
+}

@@ -15,6 +15,7 @@ public:
     Q_INVOKABLE int addCount(qint32 i); // can be invoked via the meta-object system
     void nornmalAddCount(qint32 i);
     Q_INVOKABLE QString addQString(QString strN);
+    Q_INVOKABLE void addNoReturn(qint32 i);
 public slots:
     void onIncreace();
     QString addQStringSlot(QString strN);

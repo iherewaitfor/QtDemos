@@ -13,10 +13,7 @@ DynamicClient::DynamicClient(QSharedPointer<QRemoteObjectDynamicReplica> ptr) :
 //destructor
 DynamicClient::~DynamicClient()
 {
-    if (m_callwathcer) {
-        delete m_callwathcer;
-        m_callwathcer = NULL;
-    }
+
 }
 
 // Function to initialize connections between slots and signals
@@ -42,14 +39,29 @@ void DynamicClient::initConnection_slot()
     testTimer.setInterval(5000);
  //   testTimer.start();
 
-   //QRemoteObjectPendingCall call;
+   QRemoteObjectPendingCall call;
    QString retVal;
    bool success = QMetaObject::invokeMethod(reptr.data(), "addCount", Qt::AutoConnection,
 	   Q_RETURN_ARG(QRemoteObjectPendingCall, call),
        Q_ARG(int, 5)
    );
-   m_callwathcer = new QRemoteObjectPendingCallWatcher(call);
-   QObject::connect(m_callwathcer, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
+
+   //to do:  how to free?   temply free at slot.
+   QRemoteObjectPendingCallWatcher* callwathcer = new QRemoteObjectPendingCallWatcher(call);
+   QObject::connect(callwathcer, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
+
+
+   //带返回值，但不需要返回值时
+   QMetaObject::invokeMethod(reptr.data(), "addQString", Qt::AutoConnection,
+       Q_ARG(QString, "500")
+   );
+
+   //无返回值方法调用
+   QMetaObject::invokeMethod(reptr.data(), "addNoReturn", Qt::AutoConnection,
+       Q_ARG(int, 10)
+   );
+
+
 
    //bool isCalled = call.isFinished();
    //m_callwathcer->error();
@@ -78,26 +90,18 @@ void DynamicClient::recSwitchState_slot(bool value)
 void DynamicClient::pendingCallResult(QRemoteObjectPendingCallWatcher* call) {
 
     qDebug() << "pendingCallResult call add : " << QMetaType::typeName(call->returnValue().type()) << call->returnValue().toString();
+    sender()->deleteLater(); // 待优化。若无信号返回，则会造成内存泄漏
 }
 void DynamicClient::timerOut() {
+    //有返回值
     QRemoteObjectPendingCall call;
-
-  
-    QString retVal;
     bool success = QMetaObject::invokeMethod(reptr.data(), "addCount", Qt::AutoConnection,
         Q_RETURN_ARG(QRemoteObjectPendingCall, call),
-        //Q_ARG(int, 3),
         Q_ARG(int, 5)
     );
     QRemoteObjectPendingCallWatcher* callwathcer = new QRemoteObjectPendingCallWatcher(call);
     QMetaObject::Connection c = QObject::connect(callwathcer, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
 
-    //bool isCalled = call.isFinished();
-    //m_callwathcer->error();
-
-    success = QMetaObject::invokeMethod(reptr.data(), "onIncreace", Qt::AutoConnection,
-        Q_RETURN_ARG(QRemoteObjectPendingCall, call)
-        //Q_ARG(int, 3),
-        //Q_ARG(int, 5)
-    );
+    //无返回值，直接调用
+    QMetaObject::invokeMethod(reptr.data(), "onIncreace", Qt::AutoConnection);
 }

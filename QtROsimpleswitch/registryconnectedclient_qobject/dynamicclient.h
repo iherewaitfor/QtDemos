@@ -79,8 +79,6 @@ private:
     bool clientSwitchState; // holds received server switch state
     QSharedPointer<QRemoteObjectDynamicReplica> reptr;// holds reference to replica
 
-    QRemoteObjectPendingCall call;
-    QRemoteObjectPendingCallWatcher * m_callwathcer;
     QTimer testTimer;
  };
 
