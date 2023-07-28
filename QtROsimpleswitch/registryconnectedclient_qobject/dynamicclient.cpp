@@ -26,19 +26,14 @@ void DynamicClient::initConnection_slot()
             method.returnType()<< QMetaType::typeName(method.returnType()) << " " << method.methodSignature();
     }
 
-   // // connect source replica signal currStateChanged() with client's recSwitchState() slot to receive source's current state
-   //QObject::connect(reptr.data(), SIGNAL(currStateChanged(bool)), this, SLOT(recSwitchState_slot(bool)));
-   //// connect client's echoSwitchState(..) signal with replica's server_slot(..) to echo back received state
-   //QObject::connect(this, SIGNAL(echoSwitchState(bool)),reptr.data(), SLOT(server_slot(bool)));
-
-   
-   // QRemoteObjectPendingCallWatcher callwathcer(call);
-   //QMetaObject::Connection c = QObject::connect(m_callwathcer, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
+    // connect source replica signal counterChanged()
+   QObject::connect(reptr.data(), SIGNAL(counterChanged(int)), this, SLOT(onCounterChanged_slot(int)));
+   // connect client's echoSwitchState(..) signal with replica's server_slot(..) to echo back received state
+   QObject::connect(this, SIGNAL(makeSourceEmit()),reptr.data(), SLOT(onIncreace()));
 
     QObject::connect(&testTimer, SIGNAL(timeout()), this, SLOT(timerOut()));
     testTimer.setInterval(5000);
- //   testTimer.start();
-
+    testTimer.start();
    QRemoteObjectPendingCall call;
    QString retVal;
    bool success = QMetaObject::invokeMethod(reptr.data(), "addCount", Qt::AutoConnection,
@@ -61,30 +56,15 @@ void DynamicClient::initConnection_slot()
        Q_ARG(int, 10)
    );
 
-
-
-   //bool isCalled = call.isFinished();
-   //m_callwathcer->error();
-
-   //success = QMetaObject::invokeMethod(reptr.data(), "onIncreace", Qt::AutoConnection);
-
-
-   //auto e = call.error();// , QRemoteObjectPendingCall::InvalidMessage);
-
-   //call.waitForFinished();
-
-   ////QVERIFY(call.isFinished());
-   ////QCOMPARE(call.returnValue().type(), QVariant::String);
-   //qDebug()<< " result of call add : " << QMetaType::typeName(call.returnValue().type()) << call.returnValue().toString();
-
+   Q_EMIT makeSourceEmit();
 }
 
 
-void DynamicClient::recSwitchState_slot(bool value)
+void DynamicClient::onCounterChanged_slot(int counter)
 {
-   clientSwitchState = reptr->property("currState").toBool(); // use replica property to get "currState" from source
-   qDebug() << "Received source state " << value << clientSwitchState;
-   Q_EMIT echoSwitchState(clientSwitchState); // Emit signal to echo received state back to server
+   int c = reptr->property("counter").toInt();
+   qDebug() << "Replica property counter= " << c << " onCounterChanged_slot: counter=" << counter;
+
 }
 
 void DynamicClient::pendingCallResult(QRemoteObjectPendingCallWatcher* call) {
@@ -93,15 +73,7 @@ void DynamicClient::pendingCallResult(QRemoteObjectPendingCallWatcher* call) {
     sender()->deleteLater(); // 待优化。若无信号返回，则会造成内存泄漏
 }
 void DynamicClient::timerOut() {
-    //有返回值
-    QRemoteObjectPendingCall call;
-    bool success = QMetaObject::invokeMethod(reptr.data(), "addCount", Qt::AutoConnection,
-        Q_RETURN_ARG(QRemoteObjectPendingCall, call),
-        Q_ARG(int, 5)
-    );
-    QRemoteObjectPendingCallWatcher* callwathcer = new QRemoteObjectPendingCallWatcher(call);
-    QMetaObject::Connection c = QObject::connect(callwathcer, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
+    int c = reptr->property("counter").toInt();
+    qDebug() << "timerOut Replica property counter= " << c;
 
-    //无返回值，直接调用
-    QMetaObject::invokeMethod(reptr.data(), "onIncreace", Qt::AutoConnection);
 }

@@ -67,12 +67,10 @@ public:
     ~DynamicClient() override;
 
 Q_SIGNALS:
-    void echoSwitchState(bool switchState);// this signal is connected with server_slot(..) slot of source object and echoes back switch state received from source
-
+    void makeSourceEmit();
 public Q_SLOTS:
-    void recSwitchState_slot(bool); // slot to receive source state
     void initConnection_slot();
-
+    void onCounterChanged_slot(int); // slot to receive source state
     void pendingCallResult(QRemoteObjectPendingCallWatcher* self);
     void timerOut();
 private:
