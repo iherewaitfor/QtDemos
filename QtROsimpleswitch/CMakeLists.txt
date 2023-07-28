@@ -32,3 +32,6 @@ add_subdirectory(directconnectclient)
 add_subdirectory(directconnectdynamicclient)
 add_subdirectory(registryconnectedserver)
 add_subdirectory(registryconnectedclient)
+add_subdirectory(registryconnectedclient_qobject)
+add_subdirectory(registryconnectedserver_qobject)
+
