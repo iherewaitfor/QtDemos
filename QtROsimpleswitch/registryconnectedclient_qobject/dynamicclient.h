@@ -69,7 +69,8 @@ public:
 Q_SIGNALS:
     void makeSourceEmit();
 public Q_SLOTS:
-    void initConnection_slot();
+    void initConnection_slot(); //QRemoteObjectDynamicReplica
+    void stateChanged_slot(QRemoteObjectReplica::State state, QRemoteObjectReplica::State oldState);
     void onCounterChanged_slot(int); // slot to receive source state
     void pendingCallResult(QRemoteObjectPendingCallWatcher* self);
     void timerOut();
@@ -78,6 +79,7 @@ private:
     QSharedPointer<QRemoteObjectDynamicReplica> reptr;// holds reference to replica
 
     QTimer testTimer;
+    bool m_binitConnection;
  };
 
 #endif
