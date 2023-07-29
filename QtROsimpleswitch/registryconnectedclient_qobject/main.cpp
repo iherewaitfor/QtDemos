@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
     QRemoteObjectNode repNode(QUrl(QStringLiteral("local:registry")));
 
     ptr.reset(repNode.acquireDynamic("NumberLogic")); // acquire replica of source from host node
+    ptr->setObjectName("NumberLogic");
 
     DynamicClient numberLogic(ptr); // create NumberLogic object and pass replica reference to it
 

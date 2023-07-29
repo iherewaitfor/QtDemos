@@ -28,9 +28,29 @@ void DynamicClient::initConnection_slot()
     const QMetaObject* meta = reptr->metaObject();
     for (int i = 0; i < meta->methodCount(); i++) {
         QMetaMethod method = meta->method(i);
-        qDebug() << " method " << i<< " " << 
+        //MethodType:
+        //0 plain
+        //1 signal
+        //2 slot
+        //3 constructor
+        qDebug() << " method " << i<< " MethodType" << method.methodType() << " " <<
             method.returnType()<< QMetaType::typeName(method.returnType()) << " " << method.methodSignature();
     }
+    qDebug() << " propertyCount: " << meta->propertyCount();
+    for (int i = 0; i < meta->propertyCount(); i++) {
+        QMetaProperty property = meta->property(i);
+        qDebug() << " property " << i << " " <<
+            property.name() << " " << property.typeName();
+    }
+    qDebug() << " propertyCount: " << meta->propertyCount();
+    
+    //replica 不同步对象树的信息。所以以下信息为空。
+    for (int i = 0; i < reptr->children().size(); i++) {
+        QObject* o = reptr->children().at(i);
+        qDebug() << " child   " << i << " objectName " <<
+            o->objectName();
+    }
+    qDebug() << " objcetName: " << reptr->objectName();
 
     // connect source replica signal counterChanged()
    QObject::connect(reptr.data(), SIGNAL(counterChanged(int)), this, SLOT(onCounterChanged_slot(int)));
@@ -59,6 +79,11 @@ void DynamicClient::initConnection_slot()
    QMetaObject::invokeMethod(reptr.data(), "addNoReturn", Qt::AutoConnection,
        Q_ARG(int, 10)
    );
+
+   //success = QMetaObject::invokeMethod(reptr.data(), "setCounter", Qt::AutoConnection,
+   //    Q_ARG(int, 5000)
+   //);
+   success = reptr->setProperty("counter", 5000);
 
    Q_EMIT makeSourceEmit();
 }
@@ -97,5 +122,4 @@ void DynamicClient::timerOut() {
     Q_EMIT makeSourceEmit();
     int c = reptr->property("counter").toInt();
     qDebug() << "timerOut Replica property counter= " << c;
-
 }
