@@ -19,11 +19,16 @@ add_executable(${PROJECT_NAME} ${DIR_SRCS} )
 # 添加可执行文件，注意添加WIN32，否则有一个控制台黑框
 #add_executable(${PROJECT_NAME} WIN32 ${DIR_SRCS})
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+					ARCHIVE_OUTPUT_DIRECTORY "${TARGET_OUT_DIR}"
+					RUNTIME_OUTPUT_DIRECTORY "${TARGET_OUT_DIR}"
+					LIBRARY_OUTPUT_DIRECTORY "${TARGET_OUT_DIR}")
+
 # 链接Qt库
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::RemoteObjects)
 
 # 复制依赖库到对应exe文件
 add_custom_command(TARGET ${PROJECT_NAME}
   POST_BUILD
-  COMMAND ${Qt5HOMEDIR}/bin/windeployqt.exe  ${PROJECT_BINARY_DIR}/$<CONFIGURATION>/${PROJECT_NAME}.exe
+  COMMAND ${Qt5HOMEDIR}/bin/windeployqt.exe  ${TARGET_OUT_DIR}/${PROJECT_NAME}.exe
   )

@@ -8,6 +8,7 @@ set(CMAKE_AUTORCC ON)
 project(Demo)
 
 # aux_source_directory(. DIR_SRCS)
+set(TARGET_OUT_DIR "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 
 #选择64位还是32位的Qt
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
