@@ -35,4 +35,6 @@ add_subdirectory(registryconnectedserver)
 add_subdirectory(registryconnectedclient)
 add_subdirectory(registryconnectedclient_qobject)
 add_subdirectory(registryconnectedserver_qobject)
+add_subdirectory(registryconnected_objcets_client)
+add_subdirectory(registryconnected_objects_server)
 
