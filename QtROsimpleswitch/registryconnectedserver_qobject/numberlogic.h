@@ -6,7 +6,7 @@
 class NumberLogic : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qint32 counter READ counter WRITE setCounter)
+    Q_PROPERTY(qint32 counter READ counter WRITE setCounter NOTIFY counterChanged)
 
 public:
     NumberLogic(QObject*parent = nullptr);

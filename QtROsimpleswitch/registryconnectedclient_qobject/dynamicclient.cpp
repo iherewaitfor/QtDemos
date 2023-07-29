@@ -35,12 +35,10 @@ void DynamicClient::initConnection_slot()
     testTimer.setInterval(5000);
     testTimer.start();
    QRemoteObjectPendingCall call;
-   QString retVal;
    bool success = QMetaObject::invokeMethod(reptr.data(), "addCount", Qt::AutoConnection,
 	   Q_RETURN_ARG(QRemoteObjectPendingCall, call),
        Q_ARG(int, 5)
    );
-
    //to do:  how to free?   temply free at slot.
    QRemoteObjectPendingCallWatcher* callwathcer = new QRemoteObjectPendingCallWatcher(call);
    QObject::connect(callwathcer, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
@@ -68,11 +66,16 @@ void DynamicClient::onCounterChanged_slot(int counter)
 }
 
 void DynamicClient::pendingCallResult(QRemoteObjectPendingCallWatcher* call) {
-
+    //异步回调结果
     qDebug() << "pendingCallResult call add : " << QMetaType::typeName(call->returnValue().type()) << call->returnValue().toString();
     sender()->deleteLater(); // 待优化。若无信号返回，则会造成内存泄漏
 }
 void DynamicClient::timerOut() {
+    //带返回值，但不需要返回值时
+    QMetaObject::invokeMethod(reptr.data(), "addQString", Qt::AutoConnection,
+        Q_ARG(QString, "500")
+    );
+    Q_EMIT makeSourceEmit();
     int c = reptr->property("counter").toInt();
     qDebug() << "timerOut Replica property counter= " << c;
 
