@@ -96,10 +96,13 @@ void DynamicClientTreeHelper::pendingCallResult(QRemoteObjectPendingCallWatcher*
         QString parentName = list.at(1).toString();
         if (!m_objectsMap.contains(objectName)) {
             QSharedPointer<QRemoteObjectDynamicReplica> pRep;
-            pRep.reset(reptr->node()->acquireDynamic("objectName")); // acquire replica of source from host node
+            pRep.reset(reptr->node()->acquireDynamic(objectName)); // acquire replica of source from host node
             pRep->setObjectName(objectName);
             //m_objectsMap.insert(objectName, pRep);
             m_objectsMap[objectName] = pRep;
+            QSharedPointer<DynamicClient> pClient;
+            pClient.reset(new DynamicClient(pRep));
+            m_dynamicClientsMap[objectName] = pClient;
         }
     }
 }

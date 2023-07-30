@@ -8,6 +8,7 @@
 #include <qremoteobjectdynamicreplica.h>
 #include<QRemoteObjectPendingCallWatcher>
 #include <QTimer>;
+#include "dynamicclient.h"
 
 class DynamicClientTreeHelper : public QObject
 {
@@ -24,6 +25,7 @@ private:
     QSharedPointer<QRemoteObjectDynamicReplica> reptr;// holds reference to replica
     bool m_binitConnection;
     QMap<QString, QSharedPointer<QRemoteObjectDynamicReplica>> m_objectsMap;
+    QMap<QString, QSharedPointer<DynamicClient>> m_dynamicClientsMap;
  };
 
 #endif

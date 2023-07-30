@@ -59,7 +59,7 @@ void DynamicClient::initConnection_slot()
 
     QObject::connect(&testTimer, SIGNAL(timeout()), this, SLOT(timerOut()));
     testTimer.setInterval(5000);
-    testTimer.start();
+//    testTimer.start();
    QRemoteObjectPendingCall call;
    bool success = QMetaObject::invokeMethod(reptr.data(), "addCount", Qt::AutoConnection,
 	   Q_RETURN_ARG(QRemoteObjectPendingCall, call),
@@ -69,23 +69,6 @@ void DynamicClient::initConnection_slot()
    QRemoteObjectPendingCallWatcher* callwathcer = new QRemoteObjectPendingCallWatcher(call);
    QObject::connect(callwathcer, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
 
-
-   //带返回值，但不需要返回值时
-   QMetaObject::invokeMethod(reptr.data(), "addQString", Qt::AutoConnection,
-       Q_ARG(QString, "500")
-   );
-
-   //无返回值方法调用
-   QMetaObject::invokeMethod(reptr.data(), "addNoReturn", Qt::AutoConnection,
-       Q_ARG(int, 10)
-   );
-
-   //success = QMetaObject::invokeMethod(reptr.data(), "setCounter", Qt::AutoConnection,
-   //    Q_ARG(int, 5000)
-   //);
-   success = reptr->setProperty("counter", 5000);
-
-   Q_EMIT makeSourceEmit();
 }
 
 //monitor the replica disconnect with the source
@@ -111,7 +94,7 @@ void DynamicClient::onCounterChanged_slot(int counter)
 
 void DynamicClient::pendingCallResult(QRemoteObjectPendingCallWatcher* call) {
     //异步回调结果
-    qDebug() << "pendingCallResult call add : " << QMetaType::typeName(call->returnValue().type()) << call->returnValue().toString();
+    qDebug() << reptr->objectName() << "pendingCallResult call add : " << QMetaType::typeName(call->returnValue().type()) << call->returnValue().toString();
     sender()->deleteLater(); // 待优化。若无信号返回，则会造成内存泄漏
 }
 void DynamicClient::timerOut() {
