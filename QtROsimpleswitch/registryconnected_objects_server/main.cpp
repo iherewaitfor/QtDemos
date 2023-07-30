@@ -51,6 +51,8 @@
 #include <QCoreApplication>
 #include "numberlogic.h"
 #include <QtRemoteObjects>
+#include "remoteobjecttreehelper.h"
+#include "subnumberlogic.h"
 
 int main(int argc, char *argv[])
 {
@@ -59,7 +61,24 @@ int main(int argc, char *argv[])
     QRemoteObjectHost srcNode(QUrl(QStringLiteral("local:replica")), QUrl(QStringLiteral("local:registry"))); // create node that will host source and connect to registry
 
     NumberLogic numberLogic;
-    bool isok = srcNode.enableRemoting(&numberLogic, "NumberLogic"); // enable remoting of source object
+    SubNumberLogic* sub = new SubNumberLogic(&numberLogic);
+//    bool isok = srcNode.enableRemoting(&numberLogic, "NumberLogic"); // enable remoting of source object
+
+    RemoteObjectTreeHelper treeHelper;
+    treeHelper.setRootObject(&numberLogic);
+    QList<RemoteObjectStruct>  objects = treeHelper.getObjects();
+    
+	// enable remoting of source object
+	// enableRemoting the remote object tree
+    QMap<QString, QObject*> objMap = treeHelper.getRemoteObjects();
+    Q_FOREACH(const QString key, objMap.keys()) {
+        QObject* remoteObj = (QObject*)objMap.value(key);
+        if (remoteObj) {
+            srcNode.enableRemoting(remoteObj, key);
+        }
+    }
+	//remoting the tree helper
+    srcNode.enableRemoting(&treeHelper, "NumberLogicRemoteObjectTreeHelper");
 
     return a.exec();
 }

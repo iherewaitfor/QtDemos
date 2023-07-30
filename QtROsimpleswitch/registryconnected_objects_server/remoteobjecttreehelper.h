@@ -12,10 +12,16 @@ public:
 
     void setRootObject(QObject* rootObject);
     bool enableObjectsRemoting();
-    QList<RemoteObjectStruct> getObjects();
+    Q_INVOKABLE QList<RemoteObjectStruct> getObjects();
+    QMap<QString, QObject*> getRemoteObjects();
+private:
+    void convertQObjectToRemoteStructList(QObject* itemObject, const QObject* parentObject, QList<RemoteObjectStruct>& objStructList);
+    bool convertQObjectToRemoteStruct(QObject* itemObject, const QObject* parentObject, RemoteObjectStruct& remoteObjectStruct);
+
 private:
     QObject* m_rootObject;
     QList<RemoteObjectStruct> m_objectsList;
+    QMap<QString, QObject*> m_objectMap;
 };
 
 #endif
