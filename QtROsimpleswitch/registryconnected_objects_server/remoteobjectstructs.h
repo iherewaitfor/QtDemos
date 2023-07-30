@@ -7,6 +7,19 @@ typedef struct RemoteObjectStruct
 {
     QString objName;
     QString parentName;
+    friend QDataStream& operator << (QDataStream& dataStream, const RemoteObjectStruct& object)
+    {
+        dataStream << object.objName;
+        dataStream << object.parentName;
+        return dataStream;
+    }
+
+    friend QDataStream& operator >> (QDataStream& dataStream, RemoteObjectStruct& object)
+    {
+        dataStream >> object.objName;
+        dataStream >> object.parentName;
+        return dataStream;
+    }
 }RemoteObjectStruct;
 Q_DECLARE_METATYPE(RemoteObjectStruct);
 #endif

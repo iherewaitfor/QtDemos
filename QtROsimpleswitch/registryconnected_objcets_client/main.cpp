@@ -50,19 +50,28 @@
 
 #include <QCoreApplication>
 #include "dynamicclient.h"
+#include "dynamicclienttreehelper.h"
+#include "../registryconnected_objects_server/remoteobjectstructs.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QSharedPointer<QRemoteObjectDynamicReplica> ptr; // shared pointer to hold replica
+    //QSharedPointer<QRemoteObjectDynamicReplica> ptr; // shared pointer to hold replica
 
     QRemoteObjectNode repNode(QUrl(QStringLiteral("local:registry")));
 
-    ptr.reset(repNode.acquireDynamic("NumberLogic")); // acquire replica of source from host node
-    ptr->setObjectName("NumberLogic");
+    //ptr.reset(repNode.acquireDynamic("NumberLogic")); // acquire replica of source from host node
+    //ptr->setObjectName("NumberLogic");
 
-    DynamicClient numberLogic(ptr); // create NumberLogic object and pass replica reference to it
+    //DynamicClient numberLogic(ptr); // create NumberLogic object and pass replica reference to it
+
+    QSharedPointer<QRemoteObjectDynamicReplica> pRep; // shared pointer to hold replica
+
+    pRep.reset(repNode.acquireDynamic("NumberLogicRemoteObjectTreeHelper")); // acquire replica of source from host node
+    pRep->setObjectName("NumberLogicRemoteObjectTreeHelper");
+
+    DynamicClientTreeHelper numberLogicRemoteObjectTreeHelper(pRep); // create NumberLogic object and pass replica reference to it
 
     return a.exec();
 }

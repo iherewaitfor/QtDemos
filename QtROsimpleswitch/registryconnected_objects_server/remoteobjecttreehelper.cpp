@@ -14,8 +14,19 @@ bool RemoteObjectTreeHelper::enableObjectsRemoting() {
     return false;
 }
 
-QList<RemoteObjectStruct> RemoteObjectTreeHelper::getObjects() {
-    return m_objectsList;
+QVariantList RemoteObjectTreeHelper::getObjects() {
+	QVariantList list;
+	foreach(RemoteObjectStruct objStruct, m_objectsList) {
+		QVariantList temObj;
+		temObj.append(objStruct.objName);
+		temObj.append(objStruct.parentName);
+		list.push_back(temObj);
+	}
+    return list;
+}
+
+QList<RemoteObjectStruct> RemoteObjectTreeHelper::getObjectsList() {
+	return m_objectsList;
 }
 
 QMap<QString, QObject*> RemoteObjectTreeHelper::getRemoteObjects() {

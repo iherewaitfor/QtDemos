@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
     RemoteObjectTreeHelper treeHelper;
     treeHelper.setRootObject(&numberLogic);
-    QList<RemoteObjectStruct>  objects = treeHelper.getObjects();
+    QList<RemoteObjectStruct>  objects = treeHelper.getObjectsList();
     
 	// enable remoting of source object
 	// enableRemoting the remote object tree
