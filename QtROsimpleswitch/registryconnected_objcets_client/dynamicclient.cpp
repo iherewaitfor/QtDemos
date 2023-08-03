@@ -106,3 +106,8 @@ void DynamicClient::timerOut() {
     int c = reptr->property("counter").toInt();
     qDebug() << "timerOut Replica property counter= " << c;
 }
+
+
+QSharedPointer<QRemoteObjectDynamicReplica> DynamicClient::getReplica() {
+    return reptr;
+}

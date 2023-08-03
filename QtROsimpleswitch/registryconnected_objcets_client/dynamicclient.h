@@ -57,7 +57,7 @@
 #include <QRemoteObjectNode>
 #include <qremoteobjectdynamicreplica.h>
 #include<QRemoteObjectPendingCallWatcher>
-#include <QTimer>;
+#include <QTimer>
 
 class DynamicClient : public QObject
 {
@@ -74,6 +74,7 @@ public Q_SLOTS:
     void onCounterChanged_slot(int); // slot to receive source state
     void pendingCallResult(QRemoteObjectPendingCallWatcher* self);
     void timerOut();
+    QSharedPointer<QRemoteObjectDynamicReplica> getReplica();
 private:
     bool clientSwitchState; // holds received server switch state
     QSharedPointer<QRemoteObjectDynamicReplica> reptr;// holds reference to replica

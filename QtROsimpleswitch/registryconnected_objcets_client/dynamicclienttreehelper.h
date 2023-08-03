@@ -7,7 +7,7 @@
 #include <QRemoteObjectNode>
 #include <qremoteobjectdynamicreplica.h>
 #include<QRemoteObjectPendingCallWatcher>
-#include <QTimer>;
+#include <QTimer>
 #include "dynamicclient.h"
 
 class DynamicClientTreeHelper : public QObject

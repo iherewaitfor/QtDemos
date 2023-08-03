@@ -57,6 +57,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
+    qRegisterMetaType<RemoteObjectStruct>("RemoteObjectStruct");
+    qRegisterMetaType<QList<RemoteObjectStruct>>("QList<RemoteObjectStruct>");
+    qRegisterMetaTypeStreamOperators<RemoteObjectStruct>("RemoteObjectStruct");
+    qRegisterMetaTypeStreamOperators<QList<RemoteObjectStruct>>("QList<RemoteObjectStruct>");
     //QSharedPointer<QRemoteObjectDynamicReplica> ptr; // shared pointer to hold replica
 
     QRemoteObjectNode repNode(QUrl(QStringLiteral("local:registry")));

@@ -2,6 +2,7 @@
 #include <QMetaMethod>
 #include <QRemoteObjectPendingCall>
 #include "../registryconnected_objects_server/remoteobjectstructs.h"
+#include <QtCore>
 
 // constructor
 DynamicClientTreeHelper::DynamicClientTreeHelper(QSharedPointer<QRemoteObjectDynamicReplica> ptr) :
@@ -57,6 +58,9 @@ void DynamicClientTreeHelper::initConnection_slot()
     qDebug() << " objcetName: " << reptr->objectName();
     
 
+    QVariantList varList = reptr->property("listProperty").toList();
+    qDebug() << " listProperty:" << varList;
+
     QRemoteObjectPendingCall call;
     bool success = QMetaObject::invokeMethod(reptr.data(), "getObjects", Qt::AutoConnection,
         Q_RETURN_ARG(QRemoteObjectPendingCall, call)
@@ -65,6 +69,13 @@ void DynamicClientTreeHelper::initConnection_slot()
     QRemoteObjectPendingCallWatcher* callwathcer = new QRemoteObjectPendingCallWatcher(call);
     QObject::connect(callwathcer, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
 
+    QRemoteObjectPendingCall call2;
+    success = QMetaObject::invokeMethod(reptr.data(), "getObjectsList", Qt::AutoConnection,
+        Q_RETURN_ARG(QRemoteObjectPendingCall, call2)
+    );
+    //to do:  how to free?   temply free at slot.
+    QRemoteObjectPendingCallWatcher* callwathcer2 = new QRemoteObjectPendingCallWatcher(call2);
+    QObject::connect(callwathcer2, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
 
 }
 
@@ -85,24 +96,34 @@ void DynamicClientTreeHelper::pendingCallResult(QRemoteObjectPendingCallWatcher*
 
     //异步回调结果
     qDebug() << "pendingCallResult call getObjects size : " << QMetaType::typeName(call->returnValue().type()) << call->returnValue().toList().size();
-    sender()->deleteLater(); // 待优化。若无信号返回，则会造成内存泄漏
-    QVariantList reobjList = call->returnValue().toList();
-    foreach(QVariant obj, reobjList) {
-        QVariantList list = obj.toList();
-        if (list.size() < 2) {
-            continue;
-        }
-        QString objectName = list.at(0).toString();
-        QString parentName = list.at(1).toString();
-        if (!m_objectsMap.contains(objectName)) {
-            QSharedPointer<QRemoteObjectDynamicReplica> pRep;
-            pRep.reset(reptr->node()->acquireDynamic(objectName)); // acquire replica of source from host node
-            pRep->setObjectName(objectName);
-            //m_objectsMap.insert(objectName, pRep);
-            m_objectsMap[objectName] = pRep;
-            QSharedPointer<DynamicClient> pClient;
-            pClient.reset(new DynamicClient(pRep));
-            m_dynamicClientsMap[objectName] = pClient;
+
+    if (call->returnValue().type() == QVariant::List) {
+        QVariantList reobjList = call->returnValue().toList();
+        foreach(QVariant obj, reobjList) {
+            QVariantList list = obj.toList();
+            if (list.size() < 2) {
+                continue;
+            }
+            QString objectName = list.at(0).toString();
+            QString parentName = list.at(1).toString();
+            if (!m_objectsMap.contains(objectName)) {
+                QSharedPointer<QRemoteObjectDynamicReplica> pRep;
+                pRep.reset(reptr->node()->acquireDynamic(objectName)); // acquire replica of source from host node
+                pRep->setObjectName(objectName);
+                pRep->setProperty("parentName", parentName);
+                //m_objectsMap.insert(objectName, pRep);
+                m_objectsMap[objectName] = pRep;
+                QSharedPointer<DynamicClient> pClient;
+                pClient.reset(new DynamicClient(pRep));
+                m_dynamicClientsMap[objectName] = pClient;
+
+            }
         }
     }
+    else {
+        QList<RemoteObjectStruct> list = call->returnValue().value < QList<RemoteObjectStruct>>();
+        list.size();
+    }
+
+    sender()->deleteLater(); // 待优化。若无信号返回，则会造成内存泄漏
 }

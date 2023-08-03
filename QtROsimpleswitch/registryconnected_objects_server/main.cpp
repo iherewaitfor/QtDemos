@@ -57,6 +57,10 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+    qRegisterMetaType<RemoteObjectStruct>("RemoteObjectStruct");
+    qRegisterMetaType<QList<RemoteObjectStruct>>("QList<RemoteObjectStruct>");
+    qRegisterMetaTypeStreamOperators<RemoteObjectStruct>("RemoteObjectStruct");
+    qRegisterMetaTypeStreamOperators<QList<RemoteObjectStruct>>("QList<RemoteObjectStruct>");
     QRemoteObjectRegistryHost regNode(QUrl(QStringLiteral("local:registry"))); // create node that hosts registy
     QRemoteObjectHost srcNode(QUrl(QStringLiteral("local:replica")), QUrl(QStringLiteral("local:registry"))); // create node that will host source and connect to registry
 
