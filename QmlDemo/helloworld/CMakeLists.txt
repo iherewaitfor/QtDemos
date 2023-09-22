@@ -40,5 +40,5 @@ target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Widgets Qt5::Qml Qt5::Quick
 # 复制依赖库到对应exe文件
 add_custom_command(TARGET ${PROJECT_NAME}
   POST_BUILD
-  COMMAND ${Qt5HOMEDIR}/bin/windeployqt.exe  ${PROJECT_BINARY_DIR}/$<CONFIGURATION>/${PROJECT_NAME}.exe
+  COMMAND ${Qt5HOMEDIR}/bin/windeployqt.exe --qmldir ${Qt5HOMEDIR}/qml  ${PROJECT_BINARY_DIR}/$<CONFIGURATION>/${PROJECT_NAME}.exe
   )
