@@ -12,6 +12,17 @@ to do:
 QVariant to void*
 
 const void *QVariant::constData()
+## Q_DECLARE_METATYPE(Type)
+使用该宏定义之后，QMetaType就知道该类型了。
+使用该宏的类的条件
+- 有public的默认构造函数
+- 有public的拷贝构建函数
+- 有public的构建函数
+
+自定义的类用该宏之后 ，就可以在QVariant中使用了。
+
+另外，如果要在信号和槽中使用自定义类型，需要先使用q
+
 # QMetaMethod
 
 ## QMetaMethod::invoke
