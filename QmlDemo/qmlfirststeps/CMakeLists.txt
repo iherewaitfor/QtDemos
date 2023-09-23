@@ -37,3 +37,4 @@ macro(SET_EXAMPLE_PROPERTIES target)
 endmacro()
 
 add_subdirectory(helloworld)
+add_subdirectory(quickcontrols)
