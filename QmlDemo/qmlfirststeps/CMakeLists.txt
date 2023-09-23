@@ -38,3 +38,4 @@ endmacro()
 
 add_subdirectory(helloworld)
 add_subdirectory(quickcontrols)
+add_subdirectory(handlinguserinput)
