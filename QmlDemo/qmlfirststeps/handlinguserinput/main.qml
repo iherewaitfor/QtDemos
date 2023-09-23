@@ -20,9 +20,17 @@ ApplicationWindow {
             anchors.centerIn: parent
             text: "Hello, World!"
         }
-
+        //handle clicked input.
         TapHandler {
             onTapped: parent.color = "blue"
+        }
+        // handle keyboard input
+        focus: true
+        Keys.onPressed: {
+            if (event.key == Qt.Key_Return) {
+                color = "Yellow";
+                event.accepted = true;
+            }
         }
     }
 }
