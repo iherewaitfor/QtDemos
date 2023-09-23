@@ -2,12 +2,14 @@
 cmake_minimum_required( VERSION 3.1.0 )
 project(helloworld)
 aux_source_directory(. DIR_SRCS)
+file (GLOB QML_FILES RELATIVE ${PROJECT_SOURCE_DIR}
+		"*.qml")
 file (GLOB RESOURCE_FILES RELATIVE ${PROJECT_SOURCE_DIR}
 		"*.qrc")
-qt5_add_resources(QT_RESOURCES qml.qrc)
+qt5_add_resources(QT_RESOURCES ${RESOURCE_FILES})
 
 
-add_executable(${PROJECT_NAME} ${DIR_SRCS} ${QT_RESOURCES} ${RESOURCE_FILES})
+add_executable(${PROJECT_NAME} ${DIR_SRCS} ${QT_RESOURCES} ${QML_FILES})
 SET_EXAMPLE_PROPERTIES(${PROJECT_NAME})
 
 # 链接Qt库
