@@ -3,7 +3,7 @@ cmake_minimum_required( VERSION 3.1.0 )
 project(calqlatr)
 aux_source_directory(. DIR_SRCS)
 file (GLOB QML_FILES RELATIVE ${PROJECT_SOURCE_DIR}
-		"*.qml")
+		"*.qml" "*content/*.qml" "*content/*.js")
 file (GLOB RESOURCE_FILES RELATIVE ${PROJECT_SOURCE_DIR}
 		"*.qrc")
 qt5_add_resources(QT_RESOURCES ${RESOURCE_FILES})
