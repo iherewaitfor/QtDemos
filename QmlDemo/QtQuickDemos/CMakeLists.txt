@@ -37,3 +37,5 @@ macro(SET_EXAMPLE_PROPERTIES target)
 endmacro()
 
 add_subdirectory(calqlatr)
+add_subdirectory(coffee)
+
