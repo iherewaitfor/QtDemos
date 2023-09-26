@@ -37,4 +37,6 @@ macro(SET_EXAMPLE_PROPERTIES target)
 endmacro()
 
 add_subdirectory(openglunderqml)
+add_subdirectory(d3d11underqml)
+
 
