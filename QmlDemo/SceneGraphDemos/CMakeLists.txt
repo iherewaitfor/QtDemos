@@ -40,5 +40,5 @@ add_subdirectory(openglunderqml)
 add_subdirectory(d3d11underqml)
 add_subdirectory(customgeometry)
 add_subdirectory(custommaterial)
-
+add_subdirectory(customrendernode)
 
