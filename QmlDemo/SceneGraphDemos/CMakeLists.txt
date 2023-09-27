@@ -12,7 +12,7 @@ endif()
 set(Qt6_DIR ${Qt6HOMEDIR}/lib/cmake/Qt6)
 
 # 查找Qt库
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick ShaderTools)
 
 # QML_IMPORT_PATH = ${Qt5HOMEDIR}/qml
 
@@ -39,5 +39,6 @@ endmacro()
 add_subdirectory(openglunderqml)
 add_subdirectory(d3d11underqml)
 add_subdirectory(customgeometry)
+add_subdirectory(custommaterial)
 
 
