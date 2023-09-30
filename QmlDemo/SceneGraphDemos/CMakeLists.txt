@@ -42,4 +42,5 @@ add_subdirectory(customgeometry)
 add_subdirectory(custommaterial)
 add_subdirectory(customrendernode)
 add_subdirectory(fboitem)
+add_subdirectory(twotextureproviders)
 
