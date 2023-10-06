@@ -12,6 +12,7 @@
 - [基础知识](#基础知识)
   - [元对象系统（The Meta-Object System）](#元对象系统the-meta-object-system)
   - [QObject](#qobject)
+  - [QObjectPrivate](#qobjectprivate)
   - [QMetaObject](#qmetaobject)
 - [信号和槽的实现细节(to do)](#信号和槽的实现细节to-do)
   - [Connect](#connect)
@@ -695,6 +696,40 @@ The obj variable, of type QObject *, actually refers to a MyWidget object, so we
     }
 ```
 ## QObject
+
+信号连接
+[connect](https://codebrowser.dev/qt6/qtbase/src/corelib/kernel/qobject.cpp.html#2825)
+
+```C++
+QMetaObject::Connection QObject::connect(const QObject *sender, const char *signal,
+                                         const QObject *receiver, const char *method,
+                                         Qt::ConnectionType type)
+```
+
+## QObjectPrivate
+
+线程相关数据
+[threadData](https://codebrowser.dev/qt6/qtbase/src/corelib/kernel/qobject_p.h.html#189)
+
+
+```C++
+ QAtomicPointer<QThreadData> threadData; // id of the thread that owns the object
+ using ConnectionDataPointer = QExplicitlySharedDataPointer<ConnectionData>;
+ QAtomicPointer<ConnectionData> connections;
+```
+
+[QMetaObjectPrivate::connect](https://codebrowser.dev/qt6/qtbase/src/corelib/kernel/qobject.cpp.html#_ZN18QMetaObjectPrivate7connectEPK7QObjectiPK11QMetaObjectS2_iS5_iPi)
+```C++
+QObjectPrivate::Connection *QMetaObjectPrivate::connect(const QObject *sender,
+                                 int signal_index, const QMetaObject *smeta,
+                                 const QObject *receiver, int method_index,
+                                 const QMetaObject *rmeta, int type, int *types
+```
+
+[QObjectPrivate::addConnection](https://codebrowser.dev/qt6/qtbase/src/corelib/kernel/qobject.cpp.html#_ZN14QObjectPrivate13addConnectionEiPNS_10ConnectionE)
+```C++
+inline void QObjectPrivate::addConnection(int signal, Connection *c)
+```
 
 ## QMetaObject
 Qt中的Qt元对象系统（The Qt Meta-Object System）负责信号和插槽之间的对象通信机制、运行时类型信息和Qt属性系统。为应用程序中使用的每个QObject子类创建一个QMetaObject实例，该实例存储QObject个子类的所有元信息。此对象可用作QObject:：metaObject（）。
