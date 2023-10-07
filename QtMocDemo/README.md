@@ -710,13 +710,14 @@ QMetaObject::Connection QObject::connect(const QObject *sender, const char *sign
 
 线程相关数据
 [threadData](https://codebrowser.dev/qt6/qtbase/src/corelib/kernel/qobject_p.h.html#189)
-
-
 ```C++
  QAtomicPointer<QThreadData> threadData; // id of the thread that owns the object
  using ConnectionDataPointer = QExplicitlySharedDataPointer<ConnectionData>;
  QAtomicPointer<ConnectionData> connections;
 ```
+线程的信息，可以表示该对象是在哪个线程创建的。在处理信号槽中，调用槽里，就知道该在哪个线程调用槽函数了。
+
+
 
 [QMetaObjectPrivate::connect](https://codebrowser.dev/qt6/qtbase/src/corelib/kernel/qobject.cpp.html#_ZN18QMetaObjectPrivate7connectEPK7QObjectiPK11QMetaObjectS2_iS5_iPi)
 ```C++
