@@ -70,7 +70,7 @@ void DynamicClientTreeHelper::initConnection_slot()
     QObject::connect(callwathcer, SIGNAL(finished(QRemoteObjectPendingCallWatcher*)), this, SLOT(pendingCallResult(QRemoteObjectPendingCallWatcher*)));
 
     QRemoteObjectPendingCall call2;
-    success = QMetaObject::invokeMethod(reptr.data(), "getObjectsList", Qt::AutoConnection,
+    bool success2 = QMetaObject::invokeMethod(reptr.data(), "getObjectsList", Qt::AutoConnection,
         Q_RETURN_ARG(QRemoteObjectPendingCall, call2)
     );
     //to do:  how to free?   temply free at slot.
@@ -122,7 +122,11 @@ void DynamicClientTreeHelper::pendingCallResult(QRemoteObjectPendingCallWatcher*
     }
     else {
         QList<RemoteObjectStruct> list = call->returnValue().value < QList<RemoteObjectStruct>>();
+        qDebug() << " QList<RemoteObjectStruct> size " << list.size();
         list.size();
+        for (auto v : list) {
+            qDebug() << " RemoteObjectStruct objName:" << v.objName << " parentName:" << v.parentName;
+        }
     }
 
     sender()->deleteLater(); // 待优化。若无信号返回，则会造成内存泄漏

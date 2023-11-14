@@ -36,6 +36,7 @@ void RemoteObjectTreeHelper::setListProperty(QVariantList list) {
 }
 
 QList<RemoteObjectStruct> RemoteObjectTreeHelper::getObjectsList() {
+	qDebug() << " server QList<RemoteObjectStruct> RemoteObjectTreeHelper::getObjectsList()";
 	return m_objectsList;
 }
 
