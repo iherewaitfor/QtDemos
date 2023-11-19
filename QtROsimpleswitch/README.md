@@ -1,6 +1,8 @@
 - [QtRemoteObjectdemos](#qtremoteobjectdemos)
 - [QVarint](#qvarint)
   - [Q\_DECLARE\_METATYPE](#q_declare_metatype)
+  - [QMetaType](#qmetatype)
+  - [qRegisterMetaType](#qregistermetatype)
 
 # QtRemoteObjectdemos
 
@@ -46,4 +48,7 @@ var.setValue(s); // copy s into the variant
 // retrieve the value
 MyStruct s2 = var.value<MyStruct>();
 ```
+
+## QMetaType
+## qRegisterMetaType
 
