@@ -1,6 +1,7 @@
 - [QtRemoteObjectdemos](#qtremoteobjectdemos)
 - [QVarint](#qvarint)
   - [Q\_DECLARE\_METATYPE](#q_declare_metatype)
+    - [](#)
   - [QMetaType](#qmetatype)
   - [qRegisterMetaType](#qregistermetatype)
 
@@ -49,6 +50,29 @@ var.setValue(s); // copy s into the variant
 MyStruct s2 = var.value<MyStruct>();
 ```
 
+### 
+```C++
+#define Q_DECLARE_METATYPE(TYPE) Q_DECLARE_METATYPE_IMPL(TYPE)
+#define Q_DECLARE_METATYPE_IMPL(TYPE)                                   \
+    QT_BEGIN_NAMESPACE                                                  \
+    template <>                                                         \
+    struct QMetaTypeId< TYPE >                                          \
+    {                                                                   \
+        enum { Defined = 1 };                                           \
+        static int qt_metatype_id()                                     \
+            {                                                           \
+                static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
+                if (const int id = metatype_id.loadAcquire())           \
+                    return id;                                          \
+                const int newId = qRegisterMetaType< TYPE >(#TYPE,      \
+                              reinterpret_cast< TYPE *>(quintptr(-1))); \
+                metatype_id.storeRelease(newId);                        \
+                return newId;                                           \
+            }                                                           \
+    };                                                                  \
+    QT_END_NAMESPACE
+```
+
 ## QMetaType
 QMetaType用于辅助在QVariant  或在queued信号槽 中 序列反序列化各数据类型。其关联一个名字和一个类型，以例该类型可以在运行时被创建或析构。
 可以使用qRegisterMetaType()(或registerType()，该方法Qt6.5引入)注册一个类型的名字，到QMetaType中。大多数操作都不需要注册，只有在那些需要从一个字符名字转换回QMetaType或类型ID的操作才需要。比如一些使用QObject::connect的老风格的信号槽连接，从QDataStream读用户类型到QVariant，或绑定到其他语言或IPC机制：如QML、D-BUS、JavaScritpt等。
@@ -75,3 +99,4 @@ template <typename T> int qRegisterMetaType()
 ```C++
 int id = qRegisterMetaType<MyStruct>();
 ```
+
