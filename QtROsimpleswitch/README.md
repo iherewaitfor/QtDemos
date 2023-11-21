@@ -69,3 +69,9 @@ if (type.isValid()) {
 QtRemotObject中，若使用自定义的类型，就需要这样操作。
 ## qRegisterMetaType
 
+```C++
+template <typename T> int qRegisterMetaType()
+```
+```C++
+int id = qRegisterMetaType<MyStruct>();
+```
