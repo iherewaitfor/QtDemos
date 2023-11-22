@@ -1,7 +1,7 @@
 - [QtRemoteObjectdemos](#qtremoteobjectdemos)
 - [QVarint](#qvarint)
   - [Q\_DECLARE\_METATYPE](#q_declare_metatype)
-    - [](#)
+    - [Q\_DECLARE\_METATYPE宏展开](#q_declare_metatype宏展开)
   - [QMetaType](#qmetatype)
   - [qRegisterMetaType](#qregistermetatype)
 
@@ -50,7 +50,8 @@ var.setValue(s); // copy s into the variant
 MyStruct s2 = var.value<MyStruct>();
 ```
 
-### 
+### Q_DECLARE_METATYPE宏展开
+从以下看到Q_DECLARE_METATYPE的宏展开，有调用 qRegisterMetaType.
 ```C++
 #define Q_DECLARE_METATYPE(TYPE) Q_DECLARE_METATYPE_IMPL(TYPE)
 #define Q_DECLARE_METATYPE_IMPL(TYPE)                                   \
