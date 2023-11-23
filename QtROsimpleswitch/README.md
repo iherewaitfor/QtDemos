@@ -93,11 +93,15 @@ if (type.isValid()) {
 
 QtRemotObject中，若使用自定义的类型，就需要这样操作。
 ## qRegisterMetaType
-
 ```C++
 template <typename T> int qRegisterMetaType()
 ```
+调用该函数去注册类型T。并返回元类型id。
 ```C++
 int id = qRegisterMetaType<MyStruct>();
 ```
+该函数需要在调用函数的时候，T是已经被完全定义的。对于指针类型，该函数也要要求被指向的类型是完全定义的。
+
+在QMetaType,QVariant或QObject::property()API使用类型T时，注册不是必须的。
+在queued信号槽连接中使用类型T，则必须在第一个连接建立前调用 qRegisterMetaType<T>()。标准的做法是在使用T的类的构造函数，或在main()函数里完成该调用 。
 
