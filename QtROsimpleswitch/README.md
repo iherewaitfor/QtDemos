@@ -1,4 +1,6 @@
 - [QtRemoteObjectdemos](#qtremoteobjectdemos)
+- [registryconnected\_obejcts\_server](#registryconnected_obejcts_server)
+- [registryconnected\_obejcts\_client](#registryconnected_obejcts_client)
 - [QVarint](#qvarint)
   - [Q\_DECLARE\_METATYPE](#q_declare_metatype)
     - [Q\_DECLARE\_METATYPE宏展开](#q_declare_metatype宏展开)
@@ -6,6 +8,8 @@
   - [qRegisterMetaType](#qregistermetatype)
 
 # QtRemoteObjectdemos
+# registryconnected_obejcts_server
+# registryconnected_obejcts_client
 
 # QVarint
 
