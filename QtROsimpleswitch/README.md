@@ -9,6 +9,10 @@
 
 # QtRemoteObjectdemos
 # registryconnected_obejcts_server
+
+- QRemoteObjectRegistryHost
+- QRemoteObjectHost
+  - enableRemoting
 # registryconnected_obejcts_client
 
 # QVarint
