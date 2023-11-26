@@ -14,6 +14,10 @@
 - QRemoteObjectHost
   - enableRemoting
 # registryconnected_obejcts_client
+- QRemoteObjectNode
+  - acquireDynamic
+- QRemoteObjectDynamicReplica
+  - setObjectName
 
 # QVarint
 
