@@ -1,5 +1,6 @@
 - [QtRemoteObjectdemos](#qtremoteobjectdemos)
 - [registryconnected\_obejcts\_server](#registryconnected_obejcts_server)
+  - [QRemoteObjectRegistryHost](#qremoteobjectregistryhost)
 - [registryconnected\_obejcts\_client](#registryconnected_obejcts_client)
 - [QVarint](#qvarint)
   - [Q\_DECLARE\_METATYPE](#q_declare_metatype)
@@ -13,6 +14,9 @@
 - QRemoteObjectRegistryHost
 - QRemoteObjectHost
   - enableRemoting
+
+## QRemoteObjectRegistryHost
+[QRemoteObjectRegistryHost](https://doc.qt.io/qt-6/qremoteobjectregistryhost.html#details)提供QtTemoteObjects网络的穰。一个网络可以简单为两个结点，或者是非常复杂的进程和设备的集合。
 # registryconnected_obejcts_client
 - QRemoteObjectNode
   - acquireDynamic
