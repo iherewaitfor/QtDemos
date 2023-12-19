@@ -705,6 +705,39 @@ QMetaObject::Connection QObject::connect(const QObject *sender, const char *sign
                                          const QObject *receiver, const char *method,
                                          Qt::ConnectionType type)
 ```
+- Q_DECLARE_PRIVATE
+  - d_func() 
+- Q_DECLARE_PRIVATE_D
+- Q_DECLARE_PUBLIC
+  - q_func()
+- Q_D
+  - d
+- Q_Q
+  - q
+```C++
+//\qt5\source\qtbase\src\corelib\global\qglobal.h
+#define Q_DECLARE_PRIVATE(Class) \
+    inline Class##Private* d_func() \
+    { Q_CAST_IGNORE_ALIGN(return reinterpret_cast<Class##Private *>(qGetPtrHelper(d_ptr));) } \
+    inline const Class##Private* d_func() const \
+    { Q_CAST_IGNORE_ALIGN(return reinterpret_cast<const Class##Private *>(qGetPtrHelper(d_ptr));) } \
+    friend class Class##Private;
+
+#define Q_DECLARE_PRIVATE_D(Dptr, Class) \
+    inline Class##Private* d_func() \
+    { Q_CAST_IGNORE_ALIGN(return reinterpret_cast<Class##Private *>(qGetPtrHelper(Dptr));) } \
+    inline const Class##Private* d_func() const \
+    { Q_CAST_IGNORE_ALIGN(return reinterpret_cast<const Class##Private *>(qGetPtrHelper(Dptr));) } \
+    friend class Class##Private;
+
+#define Q_DECLARE_PUBLIC(Class)                                    \
+    inline Class* q_func() { return static_cast<Class *>(q_ptr); } \
+    inline const Class* q_func() const { return static_cast<const Class *>(q_ptr); } \
+    friend class Class;
+
+#define Q_D(Class) Class##Private * const d = d_func()
+#define Q_Q(Class) Class * const q = q_func()
+```
 
 ## QObjectPrivate
 
